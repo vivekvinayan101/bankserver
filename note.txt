@@ -93,3 +93,16 @@ there are two types of middlewares:
 
 
 
+How to solve runtime errors in JSON
+-----------------------------------
+
+try except
+
+try 
+    error causing code
+
+catch
+
+    error solve
+
+.

@@ -18,11 +18,20 @@ app.use(express.json())
 
 //middleware
 const jwtmiddleware = (req, res, next) => {
-   const token = req.body.token
-   //verify token
-   const data = jwt.verify(token, "secretkey1")
-   //to continue to the next step
-   next()
+   try {
+      const token = req.headers['access_token']
+      //verify token
+      const data = jwt.verify(token, "secretkey1")
+      //to continue to the next step
+      next()
+   }
+   catch {
+      res.status(422).json({
+         statuscode:422,
+         status:false,
+         message:"Please LogIn First"
+      })
+   }
 
 }
 
@@ -53,7 +62,7 @@ app.get('/login', (req, res) => {
 })
 
 //deposit
-app.post('/deposit',jwtmiddleware, (req, res) => {
+app.post('/deposit', jwtmiddleware, (req, res) => {
 
    console.log(req.body.acnum);
 
@@ -69,7 +78,7 @@ app.post('/deposit',jwtmiddleware, (req, res) => {
 
 //withdraw
 
-app.post('/withdraw',jwtmiddleware, (req, res) => {
+app.post('/withdraw', jwtmiddleware, (req, res) => {
 
 
    const result = dataservice.withdraw(req.body.acnum, req.body.password, req.body.amount)
@@ -81,7 +90,7 @@ app.post('/withdraw',jwtmiddleware, (req, res) => {
 
 //get transaction
 
-app.get('/getTransaction',jwtmiddleware, (req, res) => {
+app.get('/getTransaction', jwtmiddleware, (req, res) => {
 
 
    const result = dataservice.getTransaction(req.body.acno)
