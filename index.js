@@ -1,7 +1,13 @@
 //import dataservice file
+
 const dataservice = require('./service/dataservice')
 
+//import cors
+
+const cors = require("cors")
+
 //import json web token
+
 const jwt = require("jsonwebtoken")
 
 //import express
@@ -12,11 +18,16 @@ const express = require("express")
 
 const app = express()
 
+//connection string to frontend integration
+
+app.use(cors({origin:'http://localhost:4200'}))
+
 //to parse JSON data from req body
 
 app.use(express.json())
 
 //middleware
+
 const jwtmiddleware = (req, res, next) => {
    try {
       const token = req.headers['access_token']
@@ -27,9 +38,9 @@ const jwtmiddleware = (req, res, next) => {
    }
    catch {
       res.status(422).json({
-         statuscode:422,
-         status:false,
-         message:"Please LogIn First"
+         statuscode: 422,
+         status: false,
+         message: "Please LogIn First"
       })
    }
 
@@ -39,9 +50,10 @@ const jwtmiddleware = (req, res, next) => {
 
 app.post('/register', (req, res) => {
 
-   const result = dataservice.register(req.body.user, req.body.pass, req.body.acno)
+   dataservice.register(req.body.user, req.body.pass, req.body.acno).then(result => {
 
-   res.status(result.statuscode).json(result)
+      res.status(result.statuscode).json(result)
+   })
 
 
 
@@ -51,27 +63,28 @@ app.post('/register', (req, res) => {
 
 
 //login
-app.get('/login', (req, res) => {
 
-   const result = dataservice.login(req.body.acno, req.body.pass)
+app.post('/login', (req, res) => {
 
-   res.status(result.statuscode).json(result)
+   dataservice.login(req.body.acno, req.body.pass).then(result => {
+      res.status(result.statuscode).json(result)
+   })
+
+
 
 
 
 })
 
 //deposit
+
 app.post('/deposit', jwtmiddleware, (req, res) => {
 
    console.log(req.body.acnum);
 
-   const result = dataservice.deposit(req.body.acnum, req.body.password, req.body.amount)
-
-   res.status(result.statuscode).json(result)
-
-
-
+   dataservice.deposit(req.body.acnum, req.body.password, req.body.amount).then(result => {
+      res.status(result.statuscode).json(result)
+   })
 
 
 })
@@ -81,23 +94,36 @@ app.post('/deposit', jwtmiddleware, (req, res) => {
 app.post('/withdraw', jwtmiddleware, (req, res) => {
 
 
-   const result = dataservice.withdraw(req.body.acnum, req.body.password, req.body.amount)
+   dataservice.withdraw(req.body.acnum, req.body.password, req.body.amount).then(result => {
+      res.status(result.statuscode).json(result)
+   })
 
-   res.status(result.statuscode).json(result)
+
 
 
 })
 
 //get transaction
 
-app.get('/getTransaction', jwtmiddleware, (req, res) => {
+app.post('/transaction',jwtmiddleware, (req, res) => {
 
 
-   const result = dataservice.getTransaction(req.body.acno)
+   dataservice.transaction(req.body.acnum).then(result => {
+      res.status(result.statuscode).json(result)
+   })
+   // dataservice.getTransaction(req.body.acno).then(result => {
+   //    res.status(result.statuscode).json(result)
+   // })
 
-   res.status(result.statuscode).json(result)
 
+})
 
+//delete
+
+app.delete('/delete/:acno',jwtmiddleware,(req,res) => {
+   dataservice.deleteAc(req.params.acno).then(result => {
+      res.status(result.statuscode).json(result)
+   })
 })
 
 

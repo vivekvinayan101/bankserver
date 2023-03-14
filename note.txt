@@ -106,3 +106,73 @@ catch
     error solve
 
 .
+MongoDB Database
+----------------
+
+Shell Commands
+--------------
+CRUD - Creata Read Update Delete
+
+1.show dbs                                                      - to see databases
+
+2.use (database_name)                                           - to open a database
+
+3.show collections                                              - to see collections inside db
+
+4.db(collection_name).find()                                    - to read all data in collections
+
+5.db(collection_name).findOne({acno:1000})                      - to read a single data
+
+6.db(collection_name).insertOne({"acno":1001,"name":Amal,....}) - to createa new data
+
+7.db(collection_name).findOne({balance:{gt:4000}})              - find using condition (query selector example)
+
+8.db(collection_name).deleteOne({"uname":"anu"})                - used to delete (delete count:output)
+
+9.db(collection_name).updateOne({uname:anu},{$set:{uname:Anu}}) - update data
+
+
+register - insertOne
+
+login - findOne
+
+deposit - updateOne
+
+withdraw - updateOne
+
+delete -  deleteOne
+
+
+Server Database Integration
+---------------------------
+
+database - 27017
+server - 3000
+
+mongoose - library used to integrate server and database.
+
+install - npm i mongoose
+
+
+
+Steps
+-----
+
+1.Import mongoose
+
+2.State a connection string to integrate
+
+3.define a model for our collection
+
+
+Frontend Server Integration
+---------------------------
+
+cors - cross origin resource sharing - library used to frontend server integration.
+
+
+Steps
+-----
+
+1.import cors
+2.connection string
